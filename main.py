@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import filedialog
 
 def do_popup(event=None):
     try:
@@ -33,13 +34,28 @@ def nextLine(event=None):
 def nextWord(event=None):
     root.focus_get().event_generate('<<SelectNextWord>>')
 
+def fileOpen():
+    root.filename = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("TXT Files","*.txt"),("All Files","*.*")))
+    try:
+        f = open(root.filename, "r")
+        fl = f.readlines()
+        T.delete(1.0,END)
+        for x in fl:
+            T.insert(END,""+x)
+    except:
+        print("ERROR: Empty file")
+
 root=Tk()
 root.title('Luna Editor')
 print("\nLuna Editor Alpha")
 print("Created by ivan770\n")
 
 menubar = Menu(root)
-menubar.add_command(label="Exit", command=root.quit)
+filemenu = Menu(menubar, tearoff=0)
+filemenu.add_command(label="Open", \
+                     command=lambda: \
+                             fileOpen())
+menubar.add_cascade(label="File", menu=filemenu)
 root.config(menu=menubar)
 print("Generated window menu")
 
@@ -103,7 +119,5 @@ S.pack(side=RIGHT, fill=Y)
 T.pack(side=LEFT, fill=BOTH, expand=YES)
 S.config(command=T.yview)
 T.config(yscrollcommand=S.set)
-print(root.winfo_screenheight)
-print(root.winfo_screenwidth)
 T.pack()
 root.mainloop()
