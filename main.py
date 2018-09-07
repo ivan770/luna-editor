@@ -1,10 +1,37 @@
 from tkinter import *
 
-def do_popup(event):
+def do_popup(event=None):
     try:
         popup.tk_popup(event.x_root, event.y_root, 0)
     finally:
         popup.grab_release()
+
+def select_all(event=None):
+    root.focus_get().event_generate('<<SelectAll>>')
+
+def undo(event=None):
+    root.focus_get().event_generate('<<Undo>>')
+
+def redo(event=None):
+    root.focus_get().event_generate('<<Redo>>')
+
+def copy(event=None):
+    root.focus_get().event_generate('<<Copy>>')
+
+def paste(event=None):
+    root.focus_get().event_generate('<<Paste>>')
+
+def cut(event=None):
+    root.focus_get().event_generate('<<Cut>>')
+
+def clear(event=None):
+    root.focus_get().event_generate('<<Clear>>')
+
+def nextLine(event=None):
+    root.focus_get().event_generate('<<SelectNextLine>>')
+
+def nextWord(event=None):
+    root.focus_get().event_generate('<<SelectNextWord>>')
 
 root=Tk()
 root.title('Luna Editor')
@@ -26,38 +53,52 @@ select = Menu(popup, tearoff=0)
 submenu.add_command(label="Undo", \
                      accelerator="Ctrl+Z", \
                      command=lambda: \
-                             root.focus_get().event_generate('<<Undo>>'))
+                             undo())
 submenu.add_command(label="Redo", \
                      accelerator="Ctrl+Y", \
                      command=lambda: \
-                             root.focus_get().event_generate('<<Redo>>'))
+                             redo())
 submenu.add_separator()
 submenu.add_command(label="Select All", \
                      accelerator="Ctrl+A", \
                      command=lambda: \
-                             root.focus_get().event_generate('<<SelectAll>>'))
+                             select_all)
 submenu.add_command(label="Copy", \
                      accelerator="Ctrl+C", \
                      command=lambda: \
-                             root.focus_get().event_generate('<<Copy>>'))
+                             copy())
 submenu.add_command(label="Paste", \
                      accelerator="Ctrl+V", \
                      command=lambda: \
-                             root.focus_get().event_generate('<<Paste>>'))
+                             paste())
 submenu.add_command(label="Cut", \
                      accelerator="Ctrl+X", \
                      command=lambda: \
-                             root.focus_get().event_generate('<<Cut>>'))
+                             cut())
 submenu.add_command(label="Clear", \
                      command=lambda: \
-                             root.focus_get().event_generate('<<Clear>>'))
+                             clear())
 select.add_command(label="Select Next Line", \
+                     accelerator="Ctrl+W", \
                      command=lambda: \
-                             root.focus_get().event_generate('<<SelectNextLine>>'))
+                             nextLine())
+select.add_command(label="Select Next Word", \
+                     accelerator="Ctrl+Q", \
+                     command=lambda: \
+                             nextWord())
 popup.add_cascade(label="Operations", menu=submenu)
 popup.add_cascade(label="Select", menu=select)
 
+T.bind("<Control-q>", nextWord)
+T.bind("<Control-w>", nextLine)
+T.bind("<Control-x>", cut)
+T.bind("<Control-v>", paste)
+T.bind("<Control-c>", copy)
+T.bind("<Control-z>", undo)
+T.bind("<Control-y>", redo)
+T.bind("<Control-a>", select_all)
 T.bind("<Button-3>", do_popup)
+
 S.pack(side=RIGHT, fill=Y)
 T.pack(side=LEFT, fill=BOTH, expand=YES)
 S.config(command=T.yview)
