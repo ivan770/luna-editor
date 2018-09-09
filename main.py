@@ -8,7 +8,8 @@ def do_popup(event=None):
         popup.grab_release()
 
 def select_all(event=None):
-    root.focus_get().event_generate('<<SelectAll>>')
+    T.tag_add('sel', '1.0', 'end')
+    return "break"
 
 def undo(event=None):
     root.focus_get().event_generate('<<Undo>>')
@@ -45,6 +46,14 @@ def fileOpen():
     except:
         print("ERROR: Empty file")
 
+def fileSave():
+    root.filename = filedialog.asksaveasfilename(initialdir = "/",title = "Save file")
+    try:
+        f = open(root.filename, "w")
+        f.write(T.get("1.0",END))
+    except:
+        print("ERROR: File write error")
+
 root=Tk()
 root.title('Luna Editor')
 print("\nLuna Editor Alpha")
@@ -55,6 +64,9 @@ filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="Open", \
                      command=lambda: \
                              fileOpen())
+filemenu.add_command(label="Save", \
+                     command=lambda: \
+                             fileSave())
 menubar.add_cascade(label="File", menu=filemenu)
 root.config(menu=menubar)
 print("Generated window menu")
@@ -78,7 +90,7 @@ submenu.add_separator()
 submenu.add_command(label="Select All", \
                      accelerator="Ctrl+A", \
                      command=lambda: \
-                             select_all)
+                             select_all())
 submenu.add_command(label="Copy", \
                      accelerator="Ctrl+C", \
                      command=lambda: \
