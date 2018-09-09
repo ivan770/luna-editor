@@ -77,6 +77,10 @@ filemenu.add_command(label="Open", \
 filemenu.add_command(label="Save", \
                      command=lambda: \
                              fileSave())
+filemenu.add_separator()
+filemenu.add_command(label="Exit", \
+                     command=lambda: \
+                             onClose())
 menubar.add_cascade(label="File", menu=filemenu)
 root.config(menu=menubar)
 print("Generated window menu")
