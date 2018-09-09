@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import filedialog
+from tkinter import messagebox
 
 def do_popup(event=None):
     try:
@@ -35,7 +36,7 @@ def nextLine(event=None):
 def nextWord(event=None):
     root.focus_get().event_generate('<<SelectNextWord>>')
 
-def fileOpen():
+def fileOpen(event=None):
     root.filename = filedialog.askopenfilename(initialdir = "/",title = "Select file",filetypes = (("TXT Files","*.txt"),("All Files","*.*")))
     try:
         f = open(root.filename, "r")
@@ -43,16 +44,25 @@ def fileOpen():
         T.delete(1.0,END)
         for x in fl:
             T.insert(END,""+x)
+        T.edit_modified(False)
     except:
         print("ERROR: Empty file")
 
-def fileSave():
+def fileSave(event=None):
     root.filename = filedialog.asksaveasfilename(initialdir = "/",title = "Save file")
     try:
         f = open(root.filename, "w")
         f.write(T.get("1.0",END))
+        T.edit_modified(False)
     except:
         print("ERROR: File write error")
+
+def onClose():
+    if T.edit_modified():
+        if messagebox.askokcancel("Quit", "You have unsaved file. Are you sure you want to quit?"):
+            root.destroy()
+    else:
+        root.destroy()
 
 root=Tk()
 root.title('Luna Editor')
@@ -132,4 +142,5 @@ T.pack(side=LEFT, fill=BOTH, expand=YES)
 S.config(command=T.yview)
 T.config(yscrollcommand=S.set)
 T.pack()
+root.protocol("WM_DELETE_WINDOW", onClose)
 root.mainloop()
