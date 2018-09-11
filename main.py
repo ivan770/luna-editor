@@ -64,6 +64,9 @@ def onClose():
     else:
         root.destroy()
 
+def tracetext(event=None):
+    menubar.entryconfigure(2, label=T.index(INSERT))
+
 root=Tk()
 root.title('Luna Editor')
 print("\nLuna Editor Alpha")
@@ -82,6 +85,7 @@ filemenu.add_command(label="Exit", \
                      command=lambda: \
                              onClose())
 menubar.add_cascade(label="File", menu=filemenu)
+menubar.add_command(label="1.0")
 root.config(menu=menubar)
 print("Generated window menu")
 
@@ -145,6 +149,6 @@ S.pack(side=RIGHT, fill=Y)
 T.pack(side=LEFT, fill=BOTH, expand=YES)
 S.config(command=T.yview)
 T.config(yscrollcommand=S.set)
-T.pack()
+T.bind('<KeyRelease>', tracetext)
 root.protocol("WM_DELETE_WINDOW", onClose)
 root.mainloop()
